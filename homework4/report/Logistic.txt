@@ -1,0 +1,24 @@
+Total number of training data: 43957
+Total number of test data: 4885
+
+Prediction accuracy: 0.5911975435005118
+Regression coefficients: [ 128.75191273  -14.7129478    -0.66521966 -143.95990953 -138.16138738
+   44.96866883 -378.21735845   91.41921096  365.66561364 -196.80538516
+  -36.23534154  122.22672404   29.59124168]
+Number of misclassified samples: 1997
+
+
+Total number of training data: 43957
+Total number of test data: 4885
+
+Prediction accuracy: 0.5062436028659161
+Regression coefficients: [-741.4763368  -444.41388019]
+Number of misclassified samples: 2412
+
+
+Total number of training data: 43957
+Total number of test data: 4885
+
+Prediction accuracy: 0.47410440122824976
+Regression coefficients: [  12.17403468  672.87443614   54.62652917 -246.98810859]
+Number of misclassified samples: 2569

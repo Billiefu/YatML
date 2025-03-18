@@ -1,0 +1,203 @@
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+
+\documentclass[a4paper]{article}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{paralist}
+\usepackage{epstopdf}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyvrb}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{float}
+\usepackage{paralist}
+\usepackage{xcolor}
+\usepackage{enumerate}
+\usepackage{array}
+\usepackage{times}
+\usepackage{url}
+\usepackage{fancyhdr}
+\usepackage{comment}
+\usepackage{environ}
+\usepackage{times}
+\usepackage{textcomp}
+\usepackage{caption}
+
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{fontspec, xeCJK}
+
+
+
+
+\urlstyle{rm}
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[]
+\newtheorem{conjecture}{Conjecture}[]
+\newtheorem{example}{Example}[]
+\newtheorem{theorem}{Theorem}[]
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+
+\floatname{algorithm}{Procedure}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\Nat}{\mathbb{N}}
+\newcommand{\br}[1]{\{#1\}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+
+\newcommand{\vc}[1]{\boldsymbol{#1}}
+\newcommand{\xv}{\vc{x}}
+\newcommand{\Sigmav}{\vc{\Sigma}}
+\newcommand{\alphav}{\vc{\alpha}}
+\newcommand{\muv}{\vc{\mu}}
+
+\def\x{\mathbf x}
+\def\y{\mathbf y}
+\def\w{\mathbf w}
+\def\v{\mathbf v}
+\def\E{\mathbb E}
+\def\V{\mathbb V}
+
+\newcommand \expect {\mathbb{E}}
+\newcommand \mle [1]{{\hat #1}^{\rm MLE}}
+\newcommand \map [1]{{\hat #1}^{\rm MAP}}
+%\newcommand \argmax {\operatorname*{argmax}}
+%\newcommand \argmin {\operatorname*{argmin}}
+\newcommand \code [1]{{\tt #1}}
+\newcommand \datacount [1]{\#\{#1\}}
+\newcommand \ind [1]{\mathbb{I}\{#1\}}
+\newcommand \bs [1]{\boldsymbol{#1}}
+
+
+% TO SHOW SOLUTIONS, include following (else comment out):
+\newenvironment{soln}{
+     \leavevmode\color{blue}\ignorespaces
+ }{}
+
+% TO ONLY SHOW HOMEWORK QUESTIONS, include following:
+%\NewEnviron{soln}
+% {}
+% {}
+
+
+
+\hypersetup{
+%    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\geometry{
+  top=1in,            % <-- you want to adjust this
+  inner=1in,
+  outer=1in,
+  bottom=1in,
+  headheight=3em,       % <-- and this
+  headsep=2em,          % <-- and this
+  footskip=3em,
+}
+
+
+\pagestyle{fancyplain}
+\lhead{\fancyplain{}{Homework 4: Support Vector Machine}}
+\rhead{\fancyplain{}{Machine Learning and Data Mining, S. Liang}}
+\cfoot{\thepage}
+
+\title{\textsc{Homework 4: \\  Support Vector Machine}} % Title
+
+\newcommand{\outDate}{November 30, 2024}
+\newcommand{\dueDate}{23:59 pm, November 30, 2024}
+
+\author{\href{xx}{\textsc{Machine Learning and Data Mining (Fall 2024)}} \\[0.5em] 
+Student Name: \hspace{13em} Student ID: \\[0.5em]
+Lectured by: Shangsong Liang \\
+Sun Yat-sen University\\
+Your assignment should be submitted to the email that will be provided by the TA \\
+Deadline of your submission is: 23:59PM, November 30, 2024\\
+**Do NOT Distributed This Document and the Associated Datasets**} 
+
+\date{}
+
+\begin{document}
+
+\maketitle 
+%\renewcommand{\baselinestretch}{2}
+\section*{Problem: Implementing SVM to complete a classification task}
+The zip includes \texttt{train.txt} and \texttt{test.txt} as the training and test datasets, respectively. \texttt{train.txt} contains 43,957 labeled data, while \texttt{test.txt} contains 4,885 unlabeled data. Each line in the .txt files represents a data entry, with labels as either ``less than 50K" or ``greater than 50K". 
+Detailed descriptions of the data feature can be found at \texttt{https://archive.ics.uci.edu/ml/datasets/Adult}.\\
+
+Write a Python program to train a SVM on the training dataset using stochastic gradient descent (SGD)~\footnote{Please go to internets to search materials on how to use SGD to train SVM.}, test it on the test dataset, and report the test accuracy. Please do not use pre-built packages; instead, implement the SVM yourself.\\
+
+\textbf{Hint}: \\
+(1) Gradients of SVM:
+
+\begin{align*}
+\begin{split}
+\nabla_a= \left \{
+\begin{array}{ll}%ll按顺序是公式左对齐和条件左对齐
+     \lambda a          & \text{if}\hspace{0.5em} y_k(a^Tx_k+b)\geq 1\\
+    \lambda a - y_kx_k                          & \text{otherwise}
+\end{array}
+\right.
+\end{split}
+\\
+\begin{split}
+\nabla_b= \left \{
+\begin{array}{ll}%ll按顺序是公式左对齐和条件左对齐
+     0         & \text{if}\hspace{0.5em} y_k(a^Tx_k+b)\geq 1\\
+    - y_k                      & \text{otherwise}
+\end{array}
+\right.
+\end{split}
+\end{align*}
+
+(2) The first column in the data represents the ID, not a feature. Data preprocessing (normalization) on the different features is necessary.\\
+
+(3) Adjust the learning rate accordingly.
+
+\section*{Submission:}
+Submit a document (Formats such as PDF or docx are acceptable) including at least the following:
+\begin{enumerate}
+    \item [1.] Key SVM concepts and an outline of your implementation approach.
+    \item [2.] Screenshot showing the printed accuracy on the test dataset.
+
+    \item [3.] Train the SVM with a regularization term and test at least the following values for the regularization constant: $[1e-3,1e-2, 1e-1, 1]$. List the accuracy for each value, and explain how and why the accuracy trends with changes in the regularization constant.
+    
+    \item [4.]  Screenshots of the code.
+    \item [5.] Complete code attached at the end of the document or using separate files.
+\end{enumerate}
+
+Besides the PDF, submit the source code files as well.
+
+\bibliographystyle{apalike}
+
+%----------------------------------------------------------------------------------------
+
+
+\end{document}

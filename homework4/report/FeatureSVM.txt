@@ -1,0 +1,27 @@
+Total number of training data: 43957
+Total number of test data: 4885
+
+100%|██████████| 200/200 [01:11<00:00,  2.62it/s]
+Feature: Relationship, Capital-loss.
+Test predictions:  [-1.  1.  1. ... -1.  1. -1.]
+Test accuracy:  0.4947799385875128
+
+100%|██████████| 200/200 [01:09<00:00,  3.06it/s]
+Feature: Relationship, Capital-loss, Native-country
+Test predictions:  [-1.  1.  1. ... -1.  1. -1.]
+Test accuracy:  0.4947799385875128
+
+100%|██████████| 200/200 [01:05<00:00,  3.05it/s]
+Feature: Fnlwgt, Relationship, Capital-loss, Native-country
+Test predictions:  [-1.  1.  1. ... -1.  1. -1.]
+Test accuracy:  0.4947799385875128
+
+100%|██████████| 200/200 [01:05<00:00,  2.71it/s]
+Feature: Education-num, Marital-status, Sex
+Test predictions:  [-1.  1. -1. ... -1. -1. -1.]
+Test accuracy:  0.3473899692937564
+
+100%|██████████| 200/200 [01:13<00:00,  3.15it/s]
+Feature: Fnlwgt, Education, Education-num, Occupation, Hours-per-week
+Test predictions:  [-1.  1. -1. ... -1. -1. -1.]
+Test accuracy:  0.3660184237461617
