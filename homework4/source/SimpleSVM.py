@@ -1,3 +1,19 @@
+"""
+Copyright (C) 2024 Fu Tszkok
+
+:module: SimpleSVM
+:function: Basic SVM implementation using stochastic gradient descent
+:author: Fu Tszkok
+:date: 2024-11-24
+:license: AGPLv3 + Additional Restrictions (Non-Commercial Use)
+
+This code is licensed under GNU Affero General Public License v3 (AGPLv3) with additional terms.
+- Commercial use prohibited (including but not limited to sale, integration into commercial products)
+- Academic use requires clear attribution in code comments or documentation
+
+Full AGPLv3 text available in LICENSE file or at <https://www.gnu.org/licenses/agpl-3.0.html>
+"""
+
 import numpy as np
 import pandas as pd
 from tqdm import trange
@@ -6,12 +22,14 @@ import matplotlib.pyplot as plt
 
 # Load data
 def load_data(file_path):
+    """Load dataset from CSV file"""
     data = pd.read_csv(file_path, header=None)
     return data
 
 
 # Handle missing values, replacing '?' with NaN
 def preprocess_data(data):
+    """Preprocess data by handling missing values"""
     data.replace('?', np.nan, inplace=True)
     for col in data.columns:
         if data[col].dtype == 'object':  # Categorical data
@@ -23,14 +41,16 @@ def preprocess_data(data):
 
 # Convert categorical features to numerical
 def encode_categorical(data):
+    """Encode categorical features as numerical values"""
     for col in data.columns:
-        if data[col].dtype == 'object':  # Encode only categorical data
+        if data[col].dtype == 'object':  # Only encode categorical data
             data[col] = data[col].astype('category').cat.codes
     return data
 
 
 # Normalize data (Manually)
 def normalize_data(X):
+    """Normalize features using z-score normalization"""
     means = np.mean(X, axis=0)
     stds = np.std(X, axis=0)
     return (X - means) / stds
@@ -38,6 +58,7 @@ def normalize_data(X):
 
 # Train SVM using SGD with momentum and learning rate decay
 def train_svm(X, y, lambda_param=0.001, learning_rate=0.01, epochs=100, momentum=0.99, decay_rate=0.9):
+    """Train SVM classifier using stochastic gradient descent"""
     rate = learning_rate
     m, n = X.shape
     w = np.random.randn(n) * 0.1  # Initialize weights
@@ -93,11 +114,13 @@ def train_svm(X, y, lambda_param=0.001, learning_rate=0.01, epochs=100, momentum
 
 # Prediction function
 def predict_svm(X, w, b):
+    """Make predictions using learned SVM model"""
     return np.sign(np.dot(X, w) + b)
 
 
 # Compute accuracy
 def compute_accuracy(y_true, y_pred):
+    """Compute classification accuracy"""
     return np.mean(y_true == y_pred)
 
 

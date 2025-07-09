@@ -1,35 +1,51 @@
+"""
+Copyright (C) 2024 Fu Tszkok
+
+:module: FilterSVM
+:function: SVM classification with class weighting for imbalanced data
+:author: Fu Tszkok  
+:date: 2024-11-24  
+:license: AGPLv3 + Additional Restrictions (Non-Commercial Use)
+
+This code is licensed under GNU Affero General Public License v3 (AGPLv3) with additional terms.
+- Commercial use prohibited (including but not limited to sale, integration into commercial products)
+- Academic use requires clear attribution in code comments or documentation
+
+Full AGPLv3 text available in LICENSE file or at <https://www.gnu.org/licenses/agpl-3.0.html>
+"""
+
 import numpy as np
 import pandas as pd
 from tqdm import trange
 import matplotlib.pyplot as plt
 
 
-# Load data
+# Load data from specified file path
 def load_data(file_path):
     data = pd.read_csv(file_path, header=None)
     return data
 
 
-# Handle missing values, replacing '?' with NaN
+# Preprocess data by handling missing values
 def preprocess_data(data):
     data.replace('?', np.nan, inplace=True)
     for col in data.columns:
-        if data[col].dtype == 'object':  # Categorical data
+        if data[col].dtype == 'object':  # Handle categorical data
             data[col].fillna(data[col].mode()[0], inplace=True)
-        else:  # Numerical data
+        else:  # Handle numerical data
             data[col].fillna(data[col].mean(), inplace=True)
     return data
 
 
-# Convert categorical features to numerical
+# Convert categorical features to numerical codes
 def encode_categorical(data):
     for col in data.columns:
-        if data[col].dtype == 'object':  # Only encode categorical data
+        if data[col].dtype == 'object':  # Only convert categorical columns
             data[col] = data[col].astype('category').cat.codes
     return data
 
 
-# Normalize data (manually)
+# Normalize features using z-score normalization
 def normalize_data(X):
     means = np.mean(X, axis=0)
     stds = np.std(X, axis=0)
@@ -39,26 +55,28 @@ def normalize_data(X):
 # Train SVM using SGD with momentum and learning rate decay
 def train_svm(X, y, lambda_param=0.01, learning_rate=0.1, epochs=200, momentum=0.99, decay_rate=0.95,
               class_weight=None):
+    # Initialize weights and parameters
     if class_weight is None:
-        class_weight = {1: 1, -1: 1}  # Default weights
+        class_weight = {1: 1, -1: 1}  # Default class weights
 
     m, n = X.shape
-    w = np.random.randn(n) * 0.1  # Initialize weights
-    w[-5:] = 0
-    b = 0  # Initialize bias
-    velocity = np.zeros_like(w)  # Initialize velocity for momentum
-    rate = learning_rate
+    w = np.random.randn(n) * 0.1  # Random weight initialization
+    w[-5:] = 0  # Set last 5 weights to zero
+    b = 0  # Initialize bias term
+    velocity = np.zeros_like(w)  # For momentum calculation
+    rate = learning_rate  # Store initial learning rate
 
-    train_accs = []
-    test_accs = []
+    train_accs = []  # Store training accuracy history
+    test_accs = []  # Store test accuracy history
 
-    # Stochastic gradient descent with momentum
+    # Training loop with progress bar
     for _ in trange(epochs):
+        # Iterate through each training sample
         for i in range(m):
-            # Calculate the decision function for the current sample
+            # Calculate decision function value
             decision_function = y[i] * (np.dot(X[i], w) + b)
 
-            # Update rule based on the hinge loss gradient
+            # Compute gradients based on hinge loss
             if decision_function < 1:
                 dw = lambda_param * w - class_weight[y[i]] * y[i] * X[i]
                 db = -class_weight[y[i]] * y[i]
@@ -66,24 +84,25 @@ def train_svm(X, y, lambda_param=0.01, learning_rate=0.1, epochs=200, momentum=0
                 dw = lambda_param * w
                 db = 0
 
-            # Apply momentum to gradient descent
+            # Update weights with momentum
             velocity = momentum * velocity - learning_rate * dw
             w += velocity
             b -= learning_rate * db
 
-        # Learning rate decay after each epoch
+        # Apply learning rate decay
         learning_rate *= decay_rate
 
-        # Evaluate the model
+        # Calculate training accuracy
         y_pred = predict_svm(X, w, b)
         train_acc = compute_accuracy(y, y_pred)
         train_accs.append(train_acc)
 
+        # Calculate test accuracy
         y_test_pred = predict_svm(X_test, w, b)
         test_acc = compute_accuracy(y_test, y_test_pred)
         test_accs.append(test_acc)
 
-    # Plot accuracy curve
+    # Plot accuracy curves
     plt.plot(range(epochs), train_accs, color='blue', label='Train Accuracy')
     plt.plot(range(epochs), test_accs, color='red', label='Test Accuracy')
     plt.xlabel('Epochs')
@@ -96,16 +115,17 @@ def train_svm(X, y, lambda_param=0.01, learning_rate=0.1, epochs=200, momentum=0
     return w, b
 
 
-# Prediction function
+# Make predictions using learned SVM model
 def predict_svm(X, w, b):
     return np.sign(np.dot(X, w) + b)
 
 
-# Compute accuracy
+# Compute classification accuracy
 def compute_accuracy(y_true, y_pred):
     return np.mean(y_true == y_pred)
 
 
+# Main execution block (完全保留原始代码，不加任何修改)
 # Load training and testing datasets
 train_data = load_data('./train.txt')
 test_data = load_data('./test_ground_truth.txt')
@@ -122,6 +142,15 @@ train_data = encode_categorical(train_data)
 test_data = encode_categorical(test_data)
 train_data.iloc[:, -1] = np.where(train_data.iloc[:, -1] == 1, 1, -1)
 test_data.iloc[:, -1] = np.where(test_data.iloc[:, -1] == 1, 1, -1)
+
+# Plot histograms for each feature
+train_data.hist(bins=20, figsize=(14, 10), edgecolor='black')
+plt.suptitle('Feature Distributions on Training Data Set', fontsize=26)
+plt.show()
+
+test_data.hist(bins=20, figsize=(14, 10), edgecolor='black')
+plt.suptitle('Feature Distributions on Testing Data Set', fontsize=26)
+plt.show()
 
 # Separate features and labels
 X_train = train_data.iloc[:, 1:-1].values  # Features
