@@ -1,5 +1,21 @@
+%!TEX program = xelatex
+%% Copyright (C) 2024 傅祉珏
+%% 
+%% This file contains LaTeX source code for the Homework3 of YatML,
+%% released under AGPLv3 license.
+%% Full license text available in LICENSE file at project root,
+%% with additional restrictions in ADDITIONAL_TERMS.md.
+%% 
+%% Commercial use prohibited. Academic use requires retention of this notice.
+%% Source repository: https://github.com/Billiefu/YatML
+
+% SPDX-FileCopyrightText: 2024 傅祉珏
+% SPDX-License-Identifier: AGPL-3.0-or-later
+% SPDX-Additional-Clauses: see ADDITIONAL_TERMS.md
+
 \documentclass[a4paper, utf8]{ctexart}
 \usepackage[fontset=Fandol]{ctex}
+\usepackage{draftwatermark}
 \usepackage{anyfontsize}
 \usepackage{indentfirst}
 \usepackage{subcaption}
@@ -11,15 +27,10 @@
 \usepackage{amsmath}
 \usepackage{lipsum}
 
-% 设置页面间距
 \geometry{a4paper,left=31mm,right=31mm,top=25mm,bottom=25mm}
-% 章节标题左对齐
 \CTEXsetup[format={\Large \bfseries}]{section}
-% 段首缩进2字符
 \setlength{\parindent}{2em}
-% 将图片标题改为英文
 \renewcommand{\figurename}{fig}
-% 设置页眉及页脚 页码
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[C]{}
@@ -28,14 +39,17 @@
 \fancyfoot[C]{\thepage}
 \fancyfoot[L,R]{}
 
-% 使宋体可加粗
 \setCJKfamilyfont{zhsong}[AutoFakeBold = {2.17}]{SimSun}
 \renewcommand*{\songti}{\CJKfamily{zhsong}}
 
-% 定义标题 作者及单位信息
 \title{\songti \Large \textbf{HOMEWORK3:\ Linear\ and\ Logistic\ Regression}}
 \author{Student\ ID:\ 21307210 \qquad Student\ Name:\ 傅祉珏}
 \date{Lectured\ by\ 梁上松,\ Sun\ Yat-sen\ University}
+
+\SetWatermarkText{Copyright\ \copyright\ 2024\ 傅祉珏}
+\SetWatermarkScale{0.4}
+\SetWatermarkAngle{45}
+\SetWatermarkColor[gray]{0.8}
 
 \begin{document}
 	
