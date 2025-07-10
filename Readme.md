@@ -57,4 +57,4 @@ I sincerely extend my gratitude to Associate Professor *Liang Shangsong* for his
 For technical inquiries, academic collaboration, or commercial licensing, contact the copyright holder via:
 
 * **Academic Email**: `futk@mail2.sysu.edu.cn`
-* **Project Discussions**: [Github Issues](https://github.com/Billiefu/YatPR/issues)
+* **Project Discussions**: [Github Issues](https://github.com/Billiefu/YatML/issues)
